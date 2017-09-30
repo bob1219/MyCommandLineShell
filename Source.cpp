@@ -118,3 +118,34 @@ unsigned int Login(const char *username, const char *password) {
 	}
 	else return 1;
 }
+
+void CommandLine(void) {
+	time_t timer;
+	struct tm now;
+	char command[COMMAND_MAX];
+
+	while (1) {
+		timer = time(NULL);
+		localtime_s(&now, &timer);
+
+		printf("[%d-%d-%d %d:%d]", now.tm_mon + 1, now.tm_mday, now.tm_year + 1900, now.tm_hour,
+			now.tm_min);
+		printf("[%s]\n", Username);
+		putchar('>');
+
+		if (fgets(command, COMMAND_MAX, stdin) == NULL) {
+			Error("Failed input.");
+			_getch();
+			exit(EXIT_FAILURE);
+		}
+		if (command[strlen(command) - 1] == '\n')
+			command[strlen(command) - 1] = '\0';
+		else
+			while (getchar() != '\n');
+
+		if (!CommandProcess(command))printf("succeed.");
+		else printf("failed.");
+
+		putchar('\n');
+	}
+}
