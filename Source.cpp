@@ -6,6 +6,8 @@
 #include "Functions.h"
 #include "Macros.h"
 
+char Username[USERNAME_MAX];
+
 int main(void) {
 	time_t timer;
 	struct tm now;
@@ -75,4 +77,44 @@ endloop:;
 void PrintVersion(void) {
 	printf("MyCommandLineShell\n");
 	printf("Version %s\n", VERSION);
+}
+
+unsigned int Login(const char *username, const char *password) {
+	FILE *FilePointer;
+	char username2[USERNAME_MAX], password2[PASSWORD_MAX];
+	short count = 0, EqualCount = 0, count2 = 0, equal = 0;
+
+	// Check username
+	if (fopen_s(&FilePointer, "files\\system\\usernames", "r") != 0) {
+		Error("Cannot open file.");
+		_getch();
+		exit(EXIT_FAILURE);
+	}
+	while (fgets(username2, USERNAME_MAX, FilePointer) != NULL) {
+		count++;
+		if (!strcmp(username, username2)) {
+			EqualCount++;
+			break;
+		}
+	}
+	if (EqualCount == 0)return 1;
+	fclose(FilePointer);
+
+	// Check password
+	if (fopen_s(&FilePointer, "files\\system\\passwords", "r") != 0) {
+		Error("Cannot open file.");
+		_getch();
+		exit(EXIT_FAILURE);
+	}
+	while (fgets(password2, PASSWORD_MAX, FilePointer) != NULL) {
+		count2++;
+		if ((count == count2) && (!strcmp(password, password2)))equal = 1;
+	}
+	fclose(FilePointer);
+
+	if (equal) {
+		strcpy_s(Username, USERNAME_MAX, username);
+		return 0;
+	}
+	else return 1;
 }
