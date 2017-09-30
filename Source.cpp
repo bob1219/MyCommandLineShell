@@ -71,3 +71,8 @@ endloop:;
 
 	CommandLine();
 }
+
+void PrintVersion(void) {
+	printf("MyCommandLineShell\n");
+	printf("Version %s\n", VERSION);
+}
