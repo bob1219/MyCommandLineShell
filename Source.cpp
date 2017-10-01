@@ -3,6 +3,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
+#include <direct.h>
 #include "Functions.h"
 #include "Macros.h"
 
@@ -147,5 +148,142 @@ void CommandLine(void) {
 		else printf("failed.");
 
 		putchar('\n');
+	}
+}
+
+unsigned int CommandProcess(const char *command) {
+	char command1[COMMAND_MAX], command2[COMMAND_MAX], command3[COMMAND_MAX];
+
+	sscanf_s(command, "%s %s %s", command1, COMMAND_MAX, command2, COMMAND_MAX, command3, COMMAND_MAX);
+
+	if (!strcmp(command1, "date")) {
+		time_t timer;
+		struct tm now;
+
+		timer = time(NULL);
+		localtime_s(&now, &timer);
+
+		printf("%d-%d-%d\n", now.tm_mon + 1, now.tm_mday, now.tm_year + 1900);
+
+		return 0;
+	}
+	else if (!strcmp(command1, "time")) {
+		time_t timer;
+		struct tm now;
+
+		timer = time(NULL);
+		localtime_s(&now, &timer);
+
+		printf("%d:%d\n", now.tm_hour, now.tm_min);
+
+		return 0;
+	}
+	else if (!strcmp(command1, "now")) {
+		time_t timer;
+		struct tm now;
+
+		timer = time(NULL);
+		localtime_s(&now, &timer);
+
+		printf("%d-%d-%d %d:%d\n", now.tm_mon + 1, now.tm_mday, now.tm_year + 1900, now.tm_hour,
+			now.tm_min);
+
+		return 0;
+	}
+	else if (!strcmp(command1, "mf")) {
+		char filename[FILE_NAME_MAX], filebox_name[FILEBOX_NAME_MAX], filepath[FILENAME_MAX];
+		FILE *FilePointer;
+
+		sscanf_s(command2, "%[^/]/%s", filebox_name, FILEBOX_NAME_MAX, filename, FILE_NAME_MAX);
+		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
+
+		if (fopen_s(&FilePointer, filepath, "w") != 0)return 1;
+		fclose(FilePointer);
+
+		return 0;
+	}
+	else if (!strcmp(command1, "rf")) {
+		char filename[FILE_NAME_MAX], filebox_name[FILEBOX_NAME_MAX], filepath[FILENAME_MAX];
+
+		sscanf_s(command2, "%[^/]/%s", filebox_name, FILEBOX_NAME_MAX, filename, FILE_NAME_MAX);
+		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
+
+		if (!remove(filepath))return 0;
+		else return 1;
+	}
+	else if (!strcmp(command1, "mfb")) {
+		char filepath[FILENAME_MAX];
+
+		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s", Username, command2);
+
+		if (!mkdir(filepath))return 0;
+		else return 1;
+	}
+	else if (!strcmp(command1, "rfb")) {
+		char filepath[FILENAME_MAX];
+
+		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s", Username, command2);
+
+		if (!rmdir(filepath))return 0;
+		else return 1;
+	}
+	else if (!strcmp(command1, "rnf")) {
+		char filepath[FILENAME_MAX], filebox_name[FILEBOX_NAME_MAX], filename[FILE_NAME_MAX];
+
+		sscanf_s(command2, "%[^/]/%s", filebox_name, FILEBOX_NAME_MAX, filename, FILE_NAME_MAX);
+		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
+
+		if (!rename(filepath, command3))return 0;
+		else return 1;
+	}
+	else if (!strcmp(command1, "pfc")) {
+		char filebox_name[FILEBOX_NAME_MAX], filename[FILE_NAME_MAX], filepath[FILENAME_MAX];
+		FILE *FilePointer;
+		int c;
+
+		sscanf_s(command2, "%[^/]/%s", filebox_name, FILEBOX_NAME_MAX, filename, FILE_NAME_MAX);
+		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
+
+		if (fopen_s(&FilePointer, filepath, "r") != 0)return 1;
+		while (c = fgetc(FilePointer) != EOF)putchar(c);
+		fclose(FilePointer);
+
+		return 0;
+	}
+	else if (!strcmp(command1, "wf")) {
+		char filebox_name[FILEBOX_NAME_MAX], filename[FILE_NAME_MAX], filepath[FILENAME_MAX],
+			fileline[FILE_LINE_MAX];
+		FILE *FilePointer;
+
+		sscanf_s(command2, "%[^/]/%s", filebox_name, FILEBOX_NAME_MAX, filename, FILE_NAME_MAX);
+		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
+
+		if (fopen_s(&FilePointer, filepath, "w") != 0)return 1;
+		while (1) {
+			putchar('>');
+			if (fgets(fileline, FILE_LINE_MAX, stdin) == NULL) {
+				Error("Failed input.");
+				_getch();
+				exit(EXIT_FAILURE);
+			}
+			if (fileline[strlen(fileline) - 1] == '\n')
+				fileline[strlen(fileline) - 1] = '\0';
+			else
+				while (getchar() != '\n');
+
+			if (!strcmp(fileline, "\\"))break;
+			else fprintf(FilePointer, "%s\n", fileline);
+		}
+		fclose(FilePointer);
+
+		return 0;
+	}
+	else {
+		char message[100];
+
+		sprintf_s(message, 100, "Unknown command \"%s\".", command1);
+		Error(message);
+
+		return 1;
 	}
 }
