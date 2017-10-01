@@ -287,3 +287,7 @@ unsigned int CommandProcess(const char *command) {
 		return 1;
 	}
 }
+
+void Error(const char *message) {
+	fprintf(stderr, "Error:%s\n", message);
+}
