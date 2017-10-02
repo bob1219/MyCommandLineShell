@@ -216,7 +216,7 @@ unsigned int CommandProcess(const char *command) {
 
 		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s", Username, command2);
 
-		if (!mkdir(filepath))return 0;
+		if (!_mkdir(filepath))return 0;
 		else return 1;
 	}
 	else if (!strcmp(command1, "rfb")) {
@@ -224,7 +224,7 @@ unsigned int CommandProcess(const char *command) {
 
 		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s", Username, command2);
 
-		if (!rmdir(filepath))return 0;
+		if (!_rmdir(filepath))return 0;
 		else return 1;
 	}
 	else if (!strcmp(command1, "rnf")) {
