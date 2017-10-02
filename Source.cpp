@@ -144,8 +144,8 @@ void CommandLine(void) {
 		else
 			while (getchar() != '\n');
 
-		if (!CommandProcess(command))printf("succeed.");
-		else printf("failed.");
+		if (!CommandProcess(command))printf("succeed.\n");
+		else printf("failed.\n");
 
 		putchar('\n');
 	}
