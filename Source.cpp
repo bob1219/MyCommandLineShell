@@ -228,12 +228,14 @@ unsigned int CommandProcess(const char *command) {
 		else return 1;
 	}
 	else if (!strcmp(command1, "rnf")) {
-		char filepath[FILENAME_MAX], filebox_name[FILEBOX_NAME_MAX], filename[FILE_NAME_MAX];
+		char filepath1[FILENAME_MAX], filebox_name[FILEBOX_NAME_MAX], filename[FILE_NAME_MAX],
+			filepath2[FILENAME_MAX];
 
 		sscanf_s(command2, "%[^/]/%s", filebox_name, FILEBOX_NAME_MAX, filename, FILE_NAME_MAX);
-		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
+		sprintf_s(filepath1, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
+		sprintf_s(filepath2, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, command3);
 
-		if (!rename(filepath, command3))return 0;
+		if (!rename(filepath1, filepath2))return 0;
 		else return 1;
 	}
 	else if (!strcmp(command1, "pfc")) {
