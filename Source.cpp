@@ -247,7 +247,7 @@ unsigned int CommandProcess(const char *command) {
 		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
 
 		if (fopen_s(&FilePointer, filepath, "r") != 0)return 1;
-		while (c = fgetc(FilePointer) != EOF)putchar(c);
+		while ((c = fgetc(FilePointer)) != EOF)putchar(c);
 		fclose(FilePointer);
 
 		return 0;
