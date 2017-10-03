@@ -92,6 +92,9 @@ unsigned int Login(const char *username, const char *password) {
 		exit(EXIT_FAILURE);
 	}
 	while (fgets(username2, USERNAME_MAX, FilePointer) != NULL) {
+		if (username2[strlen(username2) - 1] == '\n')
+			username2[strlen(username2) - 1] = '\0';
+
 		count++;
 		if (!strcmp(username, username2)) {
 			EqualCount++;
@@ -108,6 +111,9 @@ unsigned int Login(const char *username, const char *password) {
 		exit(EXIT_FAILURE);
 	}
 	while (fgets(password2, PASSWORD_MAX, FilePointer) != NULL) {
+		if (password2[strlen(password2) - 1] == '\n')
+			password2[strlen(password2) - 1] = '\0';
+
 		count2++;
 		if ((count == count2) && (!strcmp(password, password2)))equal = 1;
 	}
@@ -144,8 +150,8 @@ void CommandLine(void) {
 		else
 			while (getchar() != '\n');
 
-		if (!CommandProcess(command))printf("succeed.");
-		else printf("failed.");
+		if (!CommandProcess(command))printf("succeed.\n");
+		else printf("failed.\n");
 
 		putchar('\n');
 	}
@@ -216,7 +222,7 @@ unsigned int CommandProcess(const char *command) {
 
 		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s", Username, command2);
 
-		if (!mkdir(filepath))return 0;
+		if (!_mkdir(filepath))return 0;
 		else return 1;
 	}
 	else if (!strcmp(command1, "rfb")) {
@@ -224,16 +230,18 @@ unsigned int CommandProcess(const char *command) {
 
 		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s", Username, command2);
 
-		if (!rmdir(filepath))return 0;
+		if (!_rmdir(filepath))return 0;
 		else return 1;
 	}
 	else if (!strcmp(command1, "rnf")) {
-		char filepath[FILENAME_MAX], filebox_name[FILEBOX_NAME_MAX], filename[FILE_NAME_MAX];
+		char filepath1[FILENAME_MAX], filebox_name[FILEBOX_NAME_MAX], filename[FILE_NAME_MAX],
+			filepath2[FILENAME_MAX];
 
 		sscanf_s(command2, "%[^/]/%s", filebox_name, FILEBOX_NAME_MAX, filename, FILE_NAME_MAX);
-		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
+		sprintf_s(filepath1, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
+		sprintf_s(filepath2, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, command3);
 
-		if (!rename(filepath, command3))return 0;
+		if (!rename(filepath1, filepath2))return 0;
 		else return 1;
 	}
 	else if (!strcmp(command1, "pfc")) {
@@ -245,7 +253,7 @@ unsigned int CommandProcess(const char *command) {
 		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
 
 		if (fopen_s(&FilePointer, filepath, "r") != 0)return 1;
-		while (c = fgetc(FilePointer) != EOF)putchar(c);
+		while ((c = fgetc(FilePointer)) != EOF)putchar(c);
 		fclose(FilePointer);
 
 		return 0;
