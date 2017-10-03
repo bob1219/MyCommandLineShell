@@ -92,6 +92,9 @@ unsigned int Login(const char *username, const char *password) {
 		exit(EXIT_FAILURE);
 	}
 	while (fgets(username2, USERNAME_MAX, FilePointer) != NULL) {
+		if (username2[strlen(username2) - 1] == '\n')
+			username2[strlen(username2) - 1] = '\0';
+
 		count++;
 		if (!strcmp(username, username2)) {
 			EqualCount++;
@@ -108,6 +111,9 @@ unsigned int Login(const char *username, const char *password) {
 		exit(EXIT_FAILURE);
 	}
 	while (fgets(password2, PASSWORD_MAX, FilePointer) != NULL) {
+		if (password2[strlen(password2) - 1] == '\n')
+			password2[strlen(password2) - 1] = '\0';
+
 		count2++;
 		if ((count == count2) && (!strcmp(password, password2)))equal = 1;
 	}
