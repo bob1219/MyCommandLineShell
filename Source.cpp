@@ -287,6 +287,17 @@ unsigned int CommandProcess(const char *command) {
 		return 0;
 	}
 	else if (!strcmp(command1, "exit"))exit(EXIT_SUCCESS);
+	else if (!strcmp(command1, "mvf")) {
+		char filebox_name[FILEBOX_NAME_MAX], filename[FILE_NAME_MAX], filepath1[FILENAME_MAX],
+			filepath2[FILENAME_MAX];
+
+		sscanf_s(command2, "%[^/]/%s", filebox_name, FILEBOX_NAME_MAX, filename, FILE_NAME_MAX);
+		sprintf_s(filepath1, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
+		sprintf_s(filepath2, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
+
+		if (!rename(filepath1, filepath2))return 0;
+		else return 1;
+	}
 	else {
 		char message[100];
 
