@@ -286,6 +286,7 @@ unsigned int CommandProcess(const char *command) {
 
 		return 0;
 	}
+	else if (!strcmp(command1, "exit"))exit(EXIT_SUCCESS);
 	else {
 		char message[100];
 
