@@ -298,6 +298,19 @@ unsigned int CommandProcess(const char *command) {
 		if (!rename(filepath1, filepath2))return 0;
 		else return 1;
 	}
+	else if (!strcmp(command1, "au")) {
+		FILE *FilePointer;
+
+		if (fopen_s(&FilePointer, "files\\system\\usernames", "a") != 0)return 1;
+		fprintf(FilePointer, "%s\n", command2);
+		fclose(FilePointer);
+
+		if (fopen_s(&FilePointer, "files\\system\\passwords", "a") != 0)return 1;
+		fprintf(FilePointer, "%s\n", command3);
+		fclose(FilePointer);
+
+		return 0;
+	}
 	else {
 		char message[100];
 
