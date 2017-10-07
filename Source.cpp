@@ -293,7 +293,7 @@ unsigned int CommandProcess(const char *command) {
 
 		sscanf_s(command2, "%[^/]/%s", filebox_name, FILEBOX_NAME_MAX, filename, FILE_NAME_MAX);
 		sprintf_s(filepath1, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
-		sprintf_s(filepath2, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
+		sprintf_s(filepath2, FILENAME_MAX, "files\\%s;%s\\%s", Username, command3, filename);
 
 		if (!rename(filepath1, filepath2))return 0;
 		else return 1;
