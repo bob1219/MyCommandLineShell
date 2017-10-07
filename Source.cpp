@@ -311,6 +311,45 @@ unsigned int CommandProcess(const char *command) {
 
 		return 0;
 	}
+	else if (!strcmp(command1, "login")) {
+		switch (Login(command2, command3)) {
+		case 0:return 0;
+		case 1:return 1;
+
+		default:
+			Error("Return value of function \"login\" is invalid.");
+			_getch();
+			return EXIT_FAILURE;
+		}
+	}
+	else if (!strcmp(command1, "af")) {
+		char filebox_name[FILEBOX_NAME_MAX], filename[FILE_NAME_MAX], filepath[FILENAME_MAX],
+			fileline[FILE_LINE_MAX];
+		FILE *FilePointer;
+
+		sscanf_s(command2, "%[^/]/%s", filebox_name, FILEBOX_NAME_MAX, filename, FILE_NAME_MAX);
+		sprintf_s(filepath, FILENAME_MAX, "files\\%s;%s\\%s", Username, filebox_name, filename);
+
+		if (fopen_s(&FilePointer, filepath, "a") != 0)return 1;
+		while (1) {
+			putchar('>');
+			if (fgets(fileline, FILE_LINE_MAX, stdin) == NULL) {
+				Error("Failed input.");
+				_getch();
+				exit(EXIT_FAILURE);
+			}
+			if (fileline[strlen(fileline) - 1] == '\n')
+				fileline[strlen(fileline) - 1] = '\0';
+			else
+				while (getchar() != '\n');
+
+			if (!strcmp(fileline, "\\"))break;
+			else fprintf(FilePointer, "%s\n", fileline);
+		}
+		fclose(FilePointer);
+
+		return 0;
+	}
 	else {
 		char message[100];
 
