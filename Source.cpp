@@ -311,6 +311,17 @@ unsigned int CommandProcess(const char *command) {
 
 		return 0;
 	}
+	else if (!strcmp(command1, "login")) {
+		switch (Login(command2, command3)) {
+		case 0:return 0;
+		case 1:return 1;
+
+		default:
+			Error("Return value of function \"login\" is invalid.");
+			_getch();
+			return EXIT_FAILURE;
+		}
+	}
 	else {
 		char message[100];
 
