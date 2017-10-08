@@ -23,6 +23,8 @@ Commands
 * exit	Exit MyCommandLineShell.
 * mvf	Move a file.
 * au	Addition a user.
+* login	Login a user.
+* af	Addition to a file.
 
 History
 -------
@@ -31,6 +33,9 @@ First version.
 
 * Version 2.0
 Addition exit command and mvf command and au command.
+
+* Version 3.0
+Addition login command and af command.
 
 Developer
 ---------
