@@ -301,6 +301,22 @@ unsigned int CommandProcess(const char *command) {
 	else if (!strcmp(command1, "au")) {
 		FILE *FilePointer;
 
+		for (unsigned int i = 0; i <= strlen(command2); i++) {
+			switch (command2[i]) {
+			case '\\':
+			case '/':
+			case ':':
+			case '*':
+			case '?':
+			case '"':
+			case '<':
+			case '>':
+			case '|':
+				Error("Cannot use characters \\,/,:,*,\?,\",<,>,| for username.");
+				return 1;
+			}
+		}
+
 		if (fopen_s(&FilePointer, "files\\system\\usernames", "a") != 0)return 1;
 		fprintf(FilePointer, "%s\n", command2);
 		fclose(FilePointer);
